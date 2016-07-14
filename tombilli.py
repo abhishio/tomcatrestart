@@ -6,10 +6,12 @@ opt,aloc,mloc,adown,mdown, = '','','','',''
 Default='NULL' #TomcatDefault
 def search():
 	global aloc, mloc, adown, mdown
+	os.system('sudo updatedb')
 	aloc=loc('locate tomcat | grep /opt | grep startup.sh')
 	adown=loc('locate tomcat | grep /opt | grep shutdown.sh')
 	mloc=loc('locate tomcat | grep /usr | grep startup.sh')
 	mdown=loc('locate tomcat | grep /usr | grep shutdown.sh')
+	
 
 
 def restart(op):
@@ -64,19 +66,19 @@ def restart(op):
 	
 
 def choice():
-	global opt
-	opt=raw_input("Choose Tomcat version :\n1.\t{0}\n2.\t{1}\n\t".format(aloc,mloc))
+	global opt, aloc, mloc
+	if aloc[0] == 0 and mloc [0] == 0:
+		opt=raw_input("Choose Tomcat version :\n1.\t{0}\n2.\t{1}\n\t".format(aloc,mloc))
 
 def main():
 	global Default, aloc,mloc,opt
 	if Default == 'NULL':
-		search()
-		if aloc[0] == mloc[0] :
+			search()
 			choice()
-			if opt == '1':
+			if opt == '1' or mloc[0] != 0:
 				restart('aloc')
 				exit(0)
-			elif opt == '2':
+			elif opt == '2' or aloc[0] != 0:
 				restart('mloc')
 				exit(0)
 			else:
